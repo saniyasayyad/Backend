@@ -28,7 +28,7 @@ const userSchema =  new Schema(
             index: true         
         },
         avatar: {
-            type: string,
+            type: String,
             required: true,
         },
         coverImage: {
@@ -90,6 +90,6 @@ userSchema.methods.generateRefreshToken = function(){
         }
     )
 }
-videoSchema.plugin(mongooseAggregatePaginate)
+userSchema.plugin(mongooseAggregatePaginate)
 
 export const User = mongoose.model("User", userSchema)
