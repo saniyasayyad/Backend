@@ -1,41 +1,50 @@
-// require('dotenv').config({path: './env'})
-import dotenv from "dotenv";
-import connectionDataBase from "./db/index.js";
+import mongoose from "mongoose";
 import { app } from "./app.js";
+import dotenv from "dotenv";
 
 dotenv.config({
   path: "./.env",
 });
 
-connectionDataBase()
-  // after database connection there is  then and catch
-  .then(() => {
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(` server is running at port : ${process.env.PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log("MONGO DB CONNECTION ERROR !!!", err);
-  });
+const DB_NAME = process.env.DB_NAME || "youtube";
 
-/* import express from "express";
-const app = express();
+const connectionDataBase = async () => {
+  try {
+    console.log("🔗 Attempting to connect to MongoDB...");
+    console.log("Connection string:", process.env.MONGODB_URI);
 
-(async () => {
-  try{
-    // connect
-    mongoose.connect(`$(process.env.MONGODB_URI)/$()`);
-    app.on("error", () => {
-      console.log("APP is not Connecting", error);
-      throw error
-    })
+    const connectionInstance = await mongoose.connect(
+      `${process.env.MONGODB_URI}/${DB_NAME}`
+    );
 
-    app.listen(process.env.PORT, () => {
-      console.log(`App is listening on Port ${process.env.PORT}`);
-    })
+    console.log("✅ MongoDB Connected Successfully!");
+    console.log("Host:", connectionInstance.connection.host);
+    console.log("Database:", connectionInstance.connection.name);
 
-  }catch(error) {
-    console.log("This is the error", error);
+    // Test the connection with a simple query
+    console.log("🧪 Testing database connection...");
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    console.log(
+      "Available collections:",
+      collections.map((c) => c.name)
+    );
+  } catch (error) {
+    console.error("❌ MongoDB Connection Failed!");
+    console.error("Error:", error.message);
     throw error;
   }
-})() */
+};
+
+connectionDataBase()
+  .then(() => {
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  });
