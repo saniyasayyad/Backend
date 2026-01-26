@@ -12,6 +12,7 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
       index: true,
+      sparse: true,
     },
     email: {
       type: String,
@@ -19,6 +20,7 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      sparse: true,
     },
     fullName: {
       type: String,
@@ -52,28 +54,24 @@ const userSchema = new Schema(
   }
 );
 
-// Password encryption - SIMPLIFIED VERSION (without next parameter issues)
 userSchema.pre("save", async function () {
-  // Only hash the password if it has been modified (or is new)
   if (this.isModified("password")) {
-    console.log("🔐 Hashing password for user:", this.email);
+    console.log("Hashing password for user:", this.email);
     try {
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
-      console.log("✅ Password hashed successfully");
+      console.log("Password hashed successfully");
     } catch (error) {
-      console.error("❌ Password hashing error:", error);
+      console.error("Password hashing error:", error);
       throw error;
     }
   }
 });
 
-// Password comparison method
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// Access token generation
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -89,7 +87,6 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-// Refresh token generation
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
@@ -102,7 +99,6 @@ userSchema.methods.generateRefreshToken = function () {
   );
 };
 
-// Plugin for pagination
 userSchema.plugin(mongooseAggregatePaginate);
 
 export const User = mongoose.model("User", userSchema);

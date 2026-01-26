@@ -17,12 +17,12 @@ const connectionDataBase = async () => {
       `${process.env.MONGODB_URI}/${DB_NAME}`
     );
 
-    console.log("✅ MongoDB Connected Successfully!");
+    console.log("MongoDB Connected Successfully!");
     console.log("Host:", connectionInstance.connection.host);
     console.log("Database:", connectionInstance.connection.name);
 
     // Test the connection with a simple query
-    console.log("🧪 Testing database connection...");
+    console.log(" Testing database connection...");
     const collections = await mongoose.connection.db
       .listCollections()
       .toArray();
@@ -31,7 +31,7 @@ const connectionDataBase = async () => {
       collections.map((c) => c.name)
     );
   } catch (error) {
-    console.error("❌ MongoDB Connection Failed!");
+    console.error("MongoDB Connection Failed!");
     console.error("Error:", error.message);
     throw error;
   }
@@ -41,10 +41,10 @@ connectionDataBase()
   .then(() => {
     const PORT = process.env.PORT || 8000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
+      console.log(` Server is running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.error("❌ Failed to start server:", error);
+    console.error("Failed to start server:", error);
     process.exit(1);
   });

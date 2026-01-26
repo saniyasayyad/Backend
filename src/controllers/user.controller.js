@@ -6,24 +6,25 @@ import { uploadCloudinary } from "../utils/cloudinary.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   // Get user data from request
-  console.log("\n📝 REGISTRATION REQUEST RECEIVED");
+  console.log("\n REGISTRATION REQUEST RECEIVED");
   const { fullName, email, username, password } = req.body;
 
   console.log("Request body:", { fullName, email, username });
   console.log("Files received:", req.files);
 
   // Validate required fields
-  console.log("\n✔️  VALIDATING USER INPUT...");
+  console.log("\n VALIDATING USER INPUT...");
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
 
-  console.log("✅ All required fields present");
+  console.log(" All required fields present");
 
   // Check if user already exists
-  console.log("\n🔍 CHECKING IF USER ALREADY EXISTS...");
+  console.log("\n CHECKING IF USER ALREADY EXISTS...");
+
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
@@ -32,10 +33,10 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exists");
   }
 
-  console.log("✅ User does not exist - can proceed with registration");
+  console.log("User does not exist - can proceed with registration");
 
   // Upload files to Cloudinary
-  console.log("\n☁️  UPLOADING FILES TO CLOUDINARY...");
+  console.log("\n  UPLOADING FILES TO CLOUDINARY...");
 
   let avatarLocalPath;
   let coverImageLocalPath;
@@ -78,7 +79,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Create user in database
-  console.log("\n💾 CREATING USER IN DATABASE...");
+  console.log("\nCREATING USER IN DATABASE...");
   console.log("User data being saved:", {
     fullName,
     email,
@@ -98,10 +99,10 @@ const registerUser = asyncHandler(async (req, res) => {
       password,
       username: username.toLowerCase(),
     });
-    console.log("✅ USER CREATED IN DATABASE");
+    console.log(" USER CREATED IN DATABASE");
     console.log("- User ID:", user._id);
   } catch (error) {
-    console.log("❌ DATABASE ERROR DETAILS:");
+    console.log(" DATABASE ERROR DETAILS:");
     console.log("- Error name:", error.name);
     console.log("- Error message:", error.message);
     console.log("- Error stack:", error.stack);
