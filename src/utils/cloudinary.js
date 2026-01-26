@@ -58,17 +58,19 @@ const uploadCloudinary = async (localFilePath) => {
       resource_type: "auto",
     });
 
-    console.log("Cloudinary upload successful!");
-    console.log("- Response received:", {
-      url: response.url,
-      public_id: response.public_id,
-      format: response.format,
-      bytes: response.bytes,
-    });
+    // console.log("Cloudinary upload successful!");
+
+    // console.log("- Response received:", {
+    //   url: response.url,
+    //   public_id: response.public_id,
+    
+    //   format: response.format,
+    //   bytes: response.bytes,
+    // });
 
     // Delete local file
     fs.unlinkSync(localFilePath);
-    console.log("🗑️ Local file deleted");
+    console.log(" Local file deleted");
 
     return response;
   } catch (error) {
