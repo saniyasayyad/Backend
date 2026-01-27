@@ -226,8 +226,8 @@ const logoutUser = asyncHandler(async(req,res) => {
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshAccessToken
 
-  if(incomingRefreshToken) {
-    throw new ApiError(402, "unauthorized request")
+  if(!incomingRefreshToken) {
+    throw new ApiError(401, "unauthorized request")
   }
 
   // we want raw token
